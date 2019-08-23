@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MyOrganizationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Images">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="imageUrl" Type="varchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Organization">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="200" />
+    <Property Name="Description" Type="nvarchar" MaxLength="600" />
+    <Property Name="OrganizationDate" Type="datetime" />
+    <Property Name="MainImageId" Type="int" />
+    <Property Name="Organizer" Type="int" />
+  </EntityType>
+  <EntityType Name="OrgImage">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="OrgId" Type="int" Nullable="false" />
+    <Property Name="ImageId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OrgUser">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrgId" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="200" />
+    <Property Name="Password" Type="nvarchar" MaxLength="100" />
+    <Property Name="UserType" Type="int" />
+  </EntityType>
+  <Association Name="FK_Organization_User">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Organization" Type="Self.Organization" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Organization">
+        <PropertyRef Name="Organizer" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrgImage_Images">
+    <End Role="Images" Type="Self.Images" Multiplicity="1" />
+    <End Role="OrgImage" Type="Self.OrgImage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Images">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OrgImage">
+        <PropertyRef Name="ImageId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrgImage_Organization">
+    <End Role="Organization" Type="Self.Organization" Multiplicity="1" />
+    <End Role="OrgImage" Type="Self.OrgImage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Organization">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OrgImage">
+        <PropertyRef Name="OrgId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrgUser_OrgUser">
+    <End Role="Organization" Type="Self.Organization" Multiplicity="1" />
+    <End Role="OrgUser" Type="Self.OrgUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Organization">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OrgUser">
+        <PropertyRef Name="OrgId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrgUser_User">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="OrgUser" Type="Self.OrgUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OrgUser">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="MyOrganizationModelStoreContainer">
+    <EntitySet Name="Images" EntityType="Self.Images" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Organization" EntityType="Self.Organization" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="OrgImage" EntityType="Self.OrgImage" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="OrgUser" EntityType="Self.OrgUser" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Organization_User" Association="Self.FK_Organization_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Organization" EntitySet="Organization" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrgImage_Images" Association="Self.FK_OrgImage_Images">
+      <End Role="Images" EntitySet="Images" />
+      <End Role="OrgImage" EntitySet="OrgImage" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrgImage_Organization" Association="Self.FK_OrgImage_Organization">
+      <End Role="Organization" EntitySet="Organization" />
+      <End Role="OrgImage" EntitySet="OrgImage" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrgUser_OrgUser" Association="Self.FK_OrgUser_OrgUser">
+      <End Role="Organization" EntitySet="Organization" />
+      <End Role="OrgUser" EntitySet="OrgUser" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrgUser_User" Association="Self.FK_OrgUser_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="OrgUser" EntitySet="OrgUser" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
